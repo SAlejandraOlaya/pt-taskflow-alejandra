@@ -15,13 +15,24 @@ export function useTodos() {
     setLoading(true);
     setError(null);
 
+    const localTodosLength = useTodoStore.getState().localTodos.length;
+    const localCount = Math.min(
+      ITEMS_PER_PAGE,
+      Math.max(0, localTodosLength - (currentPage - 1) * ITEMS_PER_PAGE),
+    );
+    const apiLimit = ITEMS_PER_PAGE - localCount;
+    const apiSkip = Math.max(0, (currentPage - 1) * ITEMS_PER_PAGE - localTodosLength);
+
     try {
-      const skip = (currentPage - 1) * ITEMS_PER_PAGE;
-      const data = await todoApi.getAll(ITEMS_PER_PAGE, skip);
-      setTodos(data.todos, data.total);
+      if (apiLimit === 0) {
+        setTodos([], useTodoStore.getState().total);
+      } else {
+        const data = await todoApi.getAll(apiLimit, apiSkip);
+        setTodos(data.todos, data.total);
+      }
     } catch (err) {
       const message =
-        err instanceof Error ? err.message : "Error al cargar las tareas";
+        err instanceof Error ? err.message : "Error loading tasks";
       setError(message);
     } finally {
       setLoading(false);

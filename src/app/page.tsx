@@ -6,7 +6,7 @@ export default function Home() {
       <header className="mb-8">
         <h1 className="text-2xl font-bold tracking-tight">TaskFlow</h1>
         <p className="text-sm text-muted-foreground">
-          Gestión de tareas
+          Create your own task flow
         </p>
       </header>
 

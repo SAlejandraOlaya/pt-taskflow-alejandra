@@ -23,11 +23,11 @@ export function Pagination({
         disabled={currentPage <= 1}
       >
         <ChevronLeft className="size-4" />
-        Anterior
+        Previous
       </Button>
 
       <span className="text-sm text-muted-foreground">
-        Página {currentPage} de {totalPages}
+        Page {currentPage} of {totalPages}
       </span>
 
       <Button
@@ -36,7 +36,7 @@ export function Pagination({
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage >= totalPages}
       >
-        Siguiente
+        Next
         <ChevronRight className="size-4" />
       </Button>
     </div>

@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "TaskFlow",
-  description: "Gestión de tareas — Prueba técnica Frontend",
+  description: "Create your own task flow — Technical test frontend",
 };
 
 export default function RootLayout({

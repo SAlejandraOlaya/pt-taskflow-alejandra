@@ -1,8 +1,10 @@
 import { create } from "zustand";
-import { devtools } from "zustand/middleware";
+import { devtools, persist } from "zustand/middleware";
 import type { Todo, FilterStatus } from "./types";
 
 let localIdCounter = Date.now();
+
+const STORAGE_KEY = "taskflow-local-todos";
 
 interface TodoState {
   todos: Todo[];
@@ -25,46 +27,62 @@ interface TodoState {
 
 export const useTodoStore = create<TodoState>()(
   devtools(
-    (set) => ({
-      todos: [],
-      total: 0,
-      localTodos: [],
-      currentPage: 1,
-      filter: "all",
-      isLoading: false,
-      error: null,
+    persist(
+      (set) => ({
+        todos: [],
+        total: 0,
+        localTodos: [],
+        currentPage: 1,
+        filter: "all",
+        isLoading: false,
+        error: null,
 
-      setTodos: (todos, total) => set({ todos, total }),
+        setTodos: (todos, total) => set({ todos, total }),
 
-      addLocalTodo: (todo) =>
-        set((state) => ({
-          localTodos: [
-            { ...todo, id: ++localIdCounter, isLocal: true },
-            ...state.localTodos,
-          ],
-        })),
+        addLocalTodo: (todo) =>
+          set((state) => {
+            const newTodo: Todo = {
+              ...todo,
+              id: ++localIdCounter,
+              isLocal: true,
+            };
+            return {
+              localTodos: [newTodo, ...state.localTodos],
+            };
+          }),
 
-      toggleTodo: (id) =>
-        set((state) => ({
-          todos: state.todos.map((t) =>
-            t.id === id ? { ...t, completed: !t.completed } : t,
-          ),
-          localTodos: state.localTodos.map((t) =>
-            t.id === id ? { ...t, completed: !t.completed } : t,
-          ),
-        })),
+        toggleTodo: (id) =>
+          set((state) => ({
+            todos: state.todos.map((t) =>
+              t.id === id ? { ...t, completed: !t.completed } : t,
+            ),
+            localTodos: state.localTodos.map((t) =>
+              t.id === id ? { ...t, completed: !t.completed } : t,
+            ),
+          })),
 
-      removeTodo: (id) =>
-        set((state) => ({
-          todos: state.todos.filter((t) => t.id !== id),
-          localTodos: state.localTodos.filter((t) => t.id !== id),
-        })),
+        removeTodo: (id) =>
+          set((state) => ({
+            todos: state.todos.filter((t) => t.id !== id),
+            localTodos: state.localTodos.filter((t) => t.id !== id),
+          })),
 
-      setPage: (page) => set({ currentPage: page }),
-      setFilter: (filter) => set({ filter }),
-      setLoading: (loading) => set({ isLoading: loading }),
-      setError: (error) => set({ error }),
-    }),
+        setPage: (page) => set({ currentPage: page }),
+        setFilter: (filter) => set({ filter }),
+        setLoading: (loading) => set({ isLoading: loading }),
+        setError: (error) => set({ error }),
+      }),
+      {
+        name: STORAGE_KEY,
+        partialize: (state) => ({ localTodos: state.localTodos }),
+        onRehydrateStorage: () => (state) => {
+          if (state?.localTodos?.length) {
+            const maxId = Math.max(...state.localTodos.map((t) => t.id), 0);
+            localIdCounter = Math.max(localIdCounter, maxId);
+          }
+        },
+      },
+    ),
     { name: "TodoStore" },
   ),
 );

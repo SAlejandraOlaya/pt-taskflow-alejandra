@@ -3,6 +3,7 @@
 import { useTodoStore } from "../store";
 import { useTodos } from "../hooks/use-todos";
 import { ITEMS_PER_PAGE } from "@/src/shared/lib/constants";
+import { TodoForm } from "./todo-form";
 import { TodoList } from "./todo-list";
 import { TodoSkeleton } from "./todo-skeleton";
 import { ErrorState } from "@/src/shared/ui/error-state";
@@ -13,40 +14,45 @@ export function TodoBoard() {
   const { refetch } = useTodos();
 
   const todos = useTodoStore((s) => s.todos);
+  const localTodos = useTodoStore((s) => s.localTodos);
   const total = useTodoStore((s) => s.total);
   const currentPage = useTodoStore((s) => s.currentPage);
   const isLoading = useTodoStore((s) => s.isLoading);
   const error = useTodoStore((s) => s.error);
   const setPage = useTodoStore((s) => s.setPage);
 
-  const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
+  const virtualTotal = localTodos.length + total;
+  const totalPages = Math.ceil(virtualTotal / ITEMS_PER_PAGE);
 
-  if (isLoading) {
-    return <TodoSkeleton />;
-  }
-
-  if (error) {
-    return <ErrorState message={error} onRetry={refetch} />;
-  }
-
-  if (todos.length === 0) {
-    return (
-      <EmptyState
-        title="No hay tareas"
-        description="No se encontraron tareas en esta página."
-      />
-    );
-  }
+  // Exactly 10 items per page: local slice for this page + API slice for this page.
+  const pageStart = (currentPage - 1) * ITEMS_PER_PAGE;
+  const localSlice = localTodos.slice(pageStart, pageStart + ITEMS_PER_PAGE);
+  const allTodos = [...localSlice, ...todos].slice(0, ITEMS_PER_PAGE);
 
   return (
-    <div className="space-y-4">
-      <TodoList todos={todos} />
-      {totalPages > 1 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setPage}
+    <div className="space-y-6">
+      <TodoForm />
+
+      {isLoading ? (
+        <TodoSkeleton />
+      ) : error ? (
+        <ErrorState message={error} onRetry={refetch} />
+      ) : allTodos.length === 0 ? (
+        <EmptyState
+          title="No tasks found"
+          description="Create your first task using the form."
         />
+      ) : (
+        <>
+          <TodoList todos={allTodos} />
+          {totalPages > 1 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setPage}
+            />
+          )}
+        </>
       )}
     </div>
   );

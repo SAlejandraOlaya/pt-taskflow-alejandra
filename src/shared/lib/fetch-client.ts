@@ -13,10 +13,10 @@ export async function fetchClient<T>(
   if (!res.ok) {
     const message =
       res.status === 404
-        ? "Recurso no encontrado"
+        ? "Resource not found"
         : res.status >= 500
-          ? "Error del servidor, intenta de nuevo"
-          : `Error inesperado (${res.status})`;
+          ? "Server error, try again"
+          : `Unexpected error (${res.status})`;
     throw new Error(message);
   }
 

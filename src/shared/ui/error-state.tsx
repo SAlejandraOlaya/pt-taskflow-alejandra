@@ -7,7 +7,7 @@ interface ErrorStateProps {
 }
 
 export function ErrorState({
-  message = "Algo salió mal",
+  message = "Something went wrong",
   onRetry,
 }: ErrorStateProps) {
   return (
@@ -18,13 +18,13 @@ export function ErrorState({
       <div className="space-y-1">
         <p className="text-sm font-medium">{message}</p>
         <p className="text-sm text-muted-foreground">
-          Verifica tu conexión e intenta de nuevo.
+          Verify your connection and try again.
         </p>
       </div>
       {onRetry && (
         <Button variant="outline" size="sm" onClick={onRetry}>
           <RefreshCw className="size-4" />
-          Reintentar
+          Retry
         </Button>
       )}
     </div>

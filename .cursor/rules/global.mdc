@@ -1,0 +1,28 @@
+---
+alwaysApply: true
+---
+
+## Language
+- Respond in the same language I write in (Spanish or English).
+- Code, variable names, comments, and commit messages always in English.
+
+## Preferences
+- Use pnpm, never npm or yarn.
+- Prefer TypeScript strict mode. Avoid `any`.
+- Functional components and hooks only.
+- Named exports (except Next.js pages/layouts).
+- Keep responses concise — show code, not long explanations unless I ask.
+
+## Code Style
+- TailwindCSS for styling, no CSS modules or inline styles.
+- Early returns for guard clauses.
+- `const` by default.
+- Brief JSDoc on exported functions.
+
+## Debugging
+- Read the full error + stack trace before suggesting a fix.
+- Check related files that might be affected.
+- Explain root cause in one sentence, then show the fix.
+
+## Git
+- Suggest conventional commits: feat:, fix:, chore:, docs:, refactor:
