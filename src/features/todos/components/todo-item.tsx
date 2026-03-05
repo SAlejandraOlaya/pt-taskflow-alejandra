@@ -26,7 +26,7 @@ export function TodoItem({ todo, onToggle }: TodoItemProps) {
       </p>
 
       <Badge variant={todo.completed ? "secondary" : "outline"}>
-        {todo.completed ? "Done" : "Pending"}
+        {todo.completed ? "Completed" : "Pending"}
       </Badge>
     </div>
   );
