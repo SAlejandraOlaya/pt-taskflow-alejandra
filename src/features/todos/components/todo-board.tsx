@@ -2,6 +2,7 @@
 
 import { useTodoStore } from "../store";
 import { useTodos } from "../hooks/use-todos";
+import { useToggleTodo } from "../hooks/use-toggle-todo";
 import { ITEMS_PER_PAGE } from "@/src/shared/lib/constants";
 import { TodoForm } from "./todo-form";
 import { TodoList } from "./todo-list";
@@ -12,6 +13,7 @@ import { Pagination } from "@/src/shared/ui/pagination";
 
 export function TodoBoard() {
   const { refetch } = useTodos();
+  const { toggle } = useToggleTodo();
 
   const todos = useTodoStore((s) => s.todos);
   const localTodos = useTodoStore((s) => s.localTodos);
@@ -44,7 +46,7 @@ export function TodoBoard() {
         />
       ) : (
         <>
-          <TodoList todos={allTodos} />
+          <TodoList todos={allTodos} onToggle={toggle} />
           {totalPages > 1 && (
             <Pagination
               currentPage={currentPage}
