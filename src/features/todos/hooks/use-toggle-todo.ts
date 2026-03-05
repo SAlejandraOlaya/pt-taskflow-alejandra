@@ -5,10 +5,7 @@ import { toast } from "sonner";
 import { todoApi } from "../api";
 import { useTodoStore } from "../store";
 
-/**
- * Toggle todo completed state. Local todos: update store only (API does not persist them).
- * API todos: optimistic update + PATCH, rollback on failure.
- */
+
 export function useToggleTodo() {
   const toggleTodo = useTodoStore((s) => s.toggleTodo);
 
