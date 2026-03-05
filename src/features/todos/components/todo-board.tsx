@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { motion } from "motion/react";
 import { useTodoStore } from "../store";
 import { useTodos } from "../hooks/use-todos";
 import { useToggleTodo } from "../hooks/use-toggle-todo";
@@ -125,33 +126,39 @@ export function TodoBoard() {
             onOpenChange={(open) => !open && setTodoToDelete(null)}
           >
             <DialogContent showCloseButton>
-              <DialogHeader>
-                <DialogTitle>Delete task</DialogTitle>
-                <DialogDescription>
-                  {todoToDelete
-                    ? `Are you sure you want to delete "${todoToDelete.todo}"? This cannot be undone.`
-                    : ""}
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter showCloseButton={false}>
-                <Button
-                  variant="outline"
-                  onClick={() => setTodoToDelete(null)}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant="destructive"
-                  onClick={() => {
-                    if (todoToDelete) {
-                      deleteTodo(todoToDelete.id, todoToDelete.isLocal);
-                      setTodoToDelete(null);
-                    }
-                  }}
-                >
-                  Delete
-                </Button>
-              </DialogFooter>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.2 }}
+              >
+                <DialogHeader>
+                  <DialogTitle>Delete task</DialogTitle>
+                  <DialogDescription>
+                    {todoToDelete
+                      ? `Are you sure you want to delete "${todoToDelete.todo}"? This cannot be undone.`
+                      : ""}
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter showCloseButton={false}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setTodoToDelete(null)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    onClick={() => {
+                      if (todoToDelete) {
+                        deleteTodo(todoToDelete.id, todoToDelete.isLocal);
+                        setTodoToDelete(null);
+                      }
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </DialogFooter>
+              </motion.div>
             </DialogContent>
           </Dialog>
         </>
