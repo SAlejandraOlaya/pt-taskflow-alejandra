@@ -10,12 +10,14 @@ interface TodoState {
   todos: Todo[];
   total: number;
   localTodos: Todo[];
+  allApiTodos: Todo[] | null;
   currentPage: number;
   filter: FilterStatus;
   isLoading: boolean;
   error: string | null;
 
   setTodos: (todos: Todo[], total: number) => void;
+  setAllApiTodos: (todos: Todo[] | null) => void;
   addLocalTodo: (todo: Todo) => void;
   toggleTodo: (id: number) => void;
   removeTodo: (id: number) => void;
@@ -32,12 +34,14 @@ export const useTodoStore = create<TodoState>()(
         todos: [],
         total: 0,
         localTodos: [],
+        allApiTodos: null,
         currentPage: 1,
         filter: "all",
         isLoading: false,
         error: null,
 
         setTodos: (todos, total) => set({ todos, total }),
+        setAllApiTodos: (allApiTodos) => set({ allApiTodos }),
 
         addLocalTodo: (todo) =>
           set((state) => {
@@ -59,12 +63,16 @@ export const useTodoStore = create<TodoState>()(
             localTodos: state.localTodos.map((t) =>
               t.id === id ? { ...t, completed: !t.completed } : t,
             ),
+            allApiTodos: state.allApiTodos?.map((t) =>
+              t.id === id ? { ...t, completed: !t.completed } : t,
+            ) ?? null,
           })),
 
         removeTodo: (id) =>
           set((state) => ({
             todos: state.todos.filter((t) => t.id !== id),
             localTodos: state.localTodos.filter((t) => t.id !== id),
+            allApiTodos: state.allApiTodos?.filter((t) => t.id !== id) ?? null,
           })),
 
         setPage: (page) => set({ currentPage: page }),
