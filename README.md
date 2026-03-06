@@ -1,10 +1,10 @@
 # TaskFlow
 
-App de gestión de tareas para la prueba técnica de frontend de Orquestia. Usa la API pública de [DummyJSON](https://dummyjson.com/docs/todos) para CRUD de TODOs.
+App para gestionar tareas: crear, marcar como completadas y eliminar, con filtros (todas / pendientes / completadas) y paginación. Los datos vienen de la API pública de [DummyJSON](https://dummyjson.com/docs/todos).
 
 ## Demo
 
-> Deploy en Vercel: https://pt-taskflow-alejandra-b9wborf7p-alejandra-olaya-s-projects.vercel.app/
+Deploy en Vercel: https://pt-taskflow-alejandra-b9wborf7p-alejandra-olaya-s-projects.vercel.app/
 
 ## Stack
 
