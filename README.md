@@ -4,7 +4,7 @@ App de gestión de tareas para la prueba técnica de frontend de Orquestia. Usa 
 
 ## Demo
 
-> \_Deploy en Vercel: https://pt-taskflow-alejandra-b9wborf7p-alejandra-olaya-s-projects.vercel.app/
+> Deploy en Vercel: https://pt-taskflow-alejandra-b9wborf7p-alejandra-olaya-s-projects.vercel.app/
 
 ## Stack
 
@@ -47,14 +47,14 @@ A diferencia del toggle, el delete espera la confirmación de la API antes de re
 
 ### Testing
 
-Se incluyen tests unitarios y de componente con Jest + Testing Library que cubren el store de Zustand, los hooks de acciones CRUD, y el componente `TodoItem`.
+Se incluyen tests unitarios y de componente con Jest que cubren el store de Zustand, los hooks de acciones CRUD, y el componente `TodoItem`.
 
 ## Inicio Rápido
 
 Necesitas Node.js >= 20 y [pnpm](https://pnpm.io/) >= 9.
 
 ```bash
-git clone https://github.com/<your-username>/pt-taskflow-alejandra.git
+git clone https://github.com/SAlejandraOlaya/pt-taskflow-alejandra.git
 cd pt-taskflow-alejandra
 pnpm install
 cp .env.example .env
