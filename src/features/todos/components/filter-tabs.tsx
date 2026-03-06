@@ -15,10 +15,11 @@ interface FilterTabsProps {
   onValueChange: (value: FilterStatus) => void;
 }
 
+/** Tab bar to filter todos by completion status. */
 export function FilterTabs({ value, onValueChange }: FilterTabsProps) {
   return (
     <div
-      className="inline-flex rounded-lg border bg-muted/30 p-1"
+      className="bg-muted/30 inline-flex rounded-lg border p-1"
       role="tablist"
       aria-label="Filter tasks"
     >
@@ -27,10 +28,7 @@ export function FilterTabs({ value, onValueChange }: FilterTabsProps) {
           key={option.value}
           variant={value === option.value ? "secondary" : "ghost"}
           size="sm"
-          className={cn(
-            "rounded-md",
-            value === option.value && "shadow-xs"
-          )}
+          className={cn("rounded-md", value === option.value && "shadow-xs")}
           onClick={() => onValueChange(option.value)}
           role="tab"
           aria-selected={value === option.value}

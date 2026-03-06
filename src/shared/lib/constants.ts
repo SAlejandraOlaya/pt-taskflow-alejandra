@@ -1,3 +1,3 @@
 export const ITEMS_PER_PAGE = 10;
 
-export const ALL_API_LIMIT = 150;
+export const MAX_TODO_LENGTH = 255;

@@ -1,6 +1,6 @@
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL || "https://dummyjson.com";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://dummyjson.com";
 
+/** Wrapper over fetch that returns typed JSON and throws on non-2xx. */
 export async function fetchClient<T>(
   endpoint: string,
   options?: RequestInit,

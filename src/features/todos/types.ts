@@ -3,7 +3,6 @@ export interface Todo {
   todo: string;
   completed: boolean;
   userId: number;
-  isLocal?: boolean;
 }
 
 export interface TodosResponse {
