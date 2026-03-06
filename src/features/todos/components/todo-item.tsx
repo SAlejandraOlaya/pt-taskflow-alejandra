@@ -1,8 +1,12 @@
+"use client";
+
 import { Trash2 } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { Checkbox } from "@/src/shared/ui/checkbox";
 import { Badge } from "@/src/shared/ui/badge";
 import { Button } from "@/src/shared/ui/button";
 import type { Todo } from "../types";
+import { badgeVariants } from "../lib/motion-variants";
 
 interface TodoItemProps {
   todo: Todo;
@@ -18,6 +22,9 @@ export function TodoItem({
   onDeleteRequest,
   toggling,
 }: TodoItemProps) {
+  const reducedMotion = useReducedMotion() ?? false;
+  const variants = badgeVariants(reducedMotion);
+
   return (
     <div className="hover:bg-muted/50 flex items-center gap-3 rounded-lg border p-4 transition-colors">
       <div className="touch-manipulation transition-transform active:scale-[0.92]">
@@ -36,7 +43,17 @@ export function TodoItem({
       </p>
 
       <Badge variant={todo.completed ? "secondary" : "outline"}>
-        {todo.completed ? "Completed" : "Pending"}
+        <AnimatePresence mode="wait">
+          <motion.span
+            key={todo.completed ? "done" : "pending"}
+            initial={variants.initial}
+            animate={variants.animate}
+            exit={variants.exit}
+            className="inline-block"
+          >
+            {todo.completed ? "Completed" : "Pending"}
+          </motion.span>
+        </AnimatePresence>
       </Badge>
 
       {onDeleteRequest && (

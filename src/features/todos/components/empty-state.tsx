@@ -1,4 +1,8 @@
+"use client";
+
 import { Inbox } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
+import { emptyStateVariants } from "../lib/motion-variants";
 
 interface EmptyStateProps {
   title?: string;
@@ -12,8 +16,15 @@ export function EmptyState({
   description = "There are no items to display.",
   children,
 }: EmptyStateProps) {
+  const reducedMotion = useReducedMotion() ?? false;
+  const variants = emptyStateVariants(reducedMotion);
+
   return (
-    <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
+    <motion.div
+      initial={variants.initial}
+      animate={variants.animate}
+      className="flex flex-col items-center justify-center gap-3 py-16 text-center"
+    >
       <div className="bg-muted rounded-full p-3">
         <Inbox className="text-muted-foreground size-6" />
       </div>
@@ -22,6 +33,6 @@ export function EmptyState({
         <p className="text-muted-foreground text-sm">{description}</p>
       </div>
       {children}
-    </div>
+    </motion.div>
   );
 }

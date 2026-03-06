@@ -19,7 +19,7 @@ interface FilterTabsProps {
 export function FilterTabs({ value, onValueChange }: FilterTabsProps) {
   return (
     <div
-      className="bg-muted/30 inline-flex rounded-lg border p-1"
+      className="bg-muted/30 inline-flex rounded-lg border p-1 mb-4"
       role="tablist"
       aria-label="Filter tasks"
     >

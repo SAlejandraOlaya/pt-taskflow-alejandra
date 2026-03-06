@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { useTodoStore } from "../store";
 import { useTodos } from "../hooks/use-todos";
 import { useTodoActions } from "../hooks/use-todo-actions";
@@ -14,9 +15,15 @@ import { EmptyState } from "./empty-state";
 import { Pagination } from "./pagination";
 import { DeleteConfirmDialog } from "./delete-confirm-dialog";
 import { Button } from "@/src/shared/ui/button";
+import {
+  listItemVariants,
+  listItemTransition,
+  contentSwitchVariants,
+} from "../lib/motion-variants";
 
 /** Main orchestrator: fetching, filtering, list, and CRUD. */
 export function TodoBoard() {
+  const reducedMotion = useReducedMotion() ?? false;
   const { refetch } = useTodos();
   const { toggle, deleteTodo } = useTodoActions();
   const { displayTodos, totalPages } = useFilteredTodos();
@@ -34,75 +41,109 @@ export function TodoBoard() {
   const setFilter = useTodoStore((s) => s.setFilter);
   const togglingIds = useTodoStore((s) => s.togglingIds);
 
+  const contentKey = isLoading ? "loading" : error ? "error" : "content";
+  const switchVariants = contentSwitchVariants(reducedMotion);
+
   return (
     <div className="space-y-6">
       <TodoForm />
 
-      {isLoading ? (
-        <TodoSkeleton />
-      ) : error ? (
-        <ErrorState message={error} onRetry={refetch} />
-      ) : (
-        <>
-          <FilterTabs value={filter} onValueChange={setFilter} />
+      <AnimatePresence mode="wait">
+        {isLoading ? (
+          <motion.div
+            key="loading"
+            initial={switchVariants.initial}
+            animate={switchVariants.animate}
+            exit={switchVariants.exit}
+            className="contents"
+          >
+            <TodoSkeleton />
+          </motion.div>
+        ) : error ? (
+          <motion.div
+            key="error"
+            initial={switchVariants.initial}
+            animate={switchVariants.animate}
+            exit={switchVariants.exit}
+            className="contents"
+          >
+            <ErrorState message={error} onRetry={refetch} />
+          </motion.div>
+        ) : (
+          <motion.div
+            key={contentKey}
+            initial={switchVariants.initial}
+            animate={switchVariants.animate}
+            exit={switchVariants.exit}
+            className="contents"
+          >
+            <FilterTabs value={filter} onValueChange={setFilter} />
 
-          {displayTodos.length === 0 ? (
-            <EmptyState
-              title={filter === "all" ? "No tasks found" : `No ${filter} tasks`}
-              description={
-                filter === "all"
-                  ? "Create your first task using the form."
-                  : "Try a different filter or switch to all tasks."
-              }
-            >
-              {filter !== "all" && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setFilter("all")}
-                >
-                  Show all tasks
-                </Button>
-              )}
-            </EmptyState>
-          ) : (
-            <>
-              <ul className="space-y-3">
-                {displayTodos.map((todo, i) => (
-                  <li
-                    key={todo.id}
-                    className="animate-in fade-in-0 slide-in-from-bottom-2 duration-200"
-                    style={{
-                      animationDelay: `${i * 40}ms`,
-                      animationFillMode: "backwards",
-                    }}
+            {displayTodos.length === 0 ? (
+              <EmptyState
+                title={
+                  filter === "all" ? "No tasks found" : `No ${filter} tasks`
+                }
+                description={
+                  filter === "all"
+                    ? "Create your first task using the form."
+                    : "Try a different filter or switch to all tasks."
+                }
+              >
+                {filter !== "all" && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setFilter("all")}
                   >
-                    <TodoItem
-                      todo={todo}
-                      onToggle={toggle}
-                      onDeleteRequest={(t) => setTodoToDelete(t)}
-                      toggling={togglingIds.has(todo.id)}
-                    />
-                  </li>
-                ))}
-              </ul>
-              {totalPages > 1 && (
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={setPage}
-                />
-              )}
-            </>
-          )}
+                    Show all tasks
+                  </Button>
+                )}
+              </EmptyState>
+            ) : (
+              <>
+                <ul className="space-y-3">
+                  <AnimatePresence mode="popLayout">
+                    {displayTodos.map((todo, i) => {
+                      const variants = listItemVariants(reducedMotion);
+                      return (
+                        <motion.li
+                          key={todo.id}
+                          layout="position"
+                          initial={variants.initial}
+                          animate={variants.animate}
+                          exit={variants.exit}
+                          transition={listItemTransition(i, reducedMotion)}
+                        >
+                          <TodoItem
+                            todo={todo}
+                            onToggle={toggle}
+                            onDeleteRequest={(t) => setTodoToDelete(t)}
+                            toggling={togglingIds.has(todo.id)}
+                          />
+                        </motion.li>
+                      );
+                    })}
+                  </AnimatePresence>
+                </ul>
+                {totalPages > 1 && (
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setPage}
+                  />
+                )}
+              </>
+            )}
 
-          <DeleteConfirmDialog
-            todo={todoToDelete}
-            onClose={() => setTodoToDelete(null)}
-            onConfirm={deleteTodo}
-          />
-        </>
-      )}
+            <DeleteConfirmDialog
+              todo={todoToDelete}
+              onClose={() => setTodoToDelete(null)}
+              onConfirm={deleteTodo}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -4,7 +4,7 @@ App de gestión de tareas para la prueba técnica de frontend de Orquestia. Usa 
 
 ## Demo
 
-> _Deploy en Vercel: agregar URL final de despliegue al entregar._
+> \_Deploy en Vercel: https://pt-taskflow-alejandra-b9wborf7p-alejandra-olaya-s-projects.vercel.app/
 
 ## Stack
 
@@ -43,7 +43,7 @@ Elegí optimistic updates para el toggle porque la acción es reversible, espera
 
 ### Delete post-respuesta
 
-A diferencia del toggle, el delete espera la confirmación de la API antes de remover el TODO del listado. La eliminación es destructiva e irreversible: si la API falla, el usuario no pierde el dato. El dialog de confirmación con loading state hace que la espera sea explícita y controlada, en lugar de eliminar optimistamente y tener que restaurar un item que el usuario ya dejó de ver.
+A diferencia del toggle, el delete espera la confirmación de la API antes de remover el TODO del listado. La eliminación es destructiva e irreversible: si la API falla, el usuario no pierde el dato. El dialog de confirmación con loading state hace que la espera sea explícita y controlada, en lugar de eliminar de inmediato (sin esperar confirmación del servidor) y tener que restaurar un item que el usuario ya dejó de ver.
 
 ### Testing
 
